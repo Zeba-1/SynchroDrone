@@ -71,16 +71,13 @@ class PathFinderController(Node):
         self.timer = self.create_timer(0.01, self.timer_callback)
 
         # Initialize wall following state machine
-        self.wall_following = PathFinder(
-                max_turn_rate=max_turn_rate,
-                max_forward_speed=max_forward_speed,
-                init_state=PathFinder.StateWallFollowing.FORWARD)
+        self.wall_following = PathFinder()
 
         # Give a take off command but wait for the delay to start the wall following
         self.wait_for_start = True
         self.start_clock = self.get_clock().now().nanoseconds * 1e-9
         msg = Twist()
-        msg.linear.z = 0.5
+        msg.linear.z = 1.
         self.twist_publisher.publish(msg)
 
     def stop_wall_following_cb(self, request, response):
@@ -100,7 +97,7 @@ class PathFinderController(Node):
     # Fonctione appeler a chaque fois que le timer est declenche
     def timer_callback(self):
 
-        # On attend le temps de delay avant de commencer le wall following
+        # On attend le temps de delay avant de commencer le path finding
         if self.wait_for_start:
             if self.get_clock().now().nanoseconds * 1e-9 - self.start_clock > self.delay:
                 self.get_logger().info('Starting wall following')
@@ -112,34 +109,18 @@ class PathFinderController(Node):
         velocity_x = 0.0
         velocity_y = 0.0
         yaw_rate = 0.0
-        state_wf = PathFinder.StateWallFollowing.HOVER
+
+        # Get position
+        x_pos = self.position[0]
+        y_pos = self.position[1]
+        #print(f"== DEBUG ==> Position: {round(x_pos, 2)}, {round(y_pos, 2)}")
 
         # Get Yaw
         actual_yaw_rad = self.angles[2]
 
-        # get front and side range in meters
-        right_range = self.ranges[1]
-        front_range = self.ranges[2]
-        left_range = self.ranges[3]
-
-        #self.get_logger().info(f"Front range: {front_range}, Right range: {right_range}, Left range: {left_range}")
-
-        # choose here the direction that you want the wall following to turn to
-        if self.wall_following_direction == 'right':
-            wf_dir = PathFinder.WallFollowingDirection.RIGHT
-            side_range = left_range
-        else:
-            wf_dir = PathFinder.WallFollowingDirection.LEFT
-            side_range = right_range
-
-        time_now = self.get_clock().now().nanoseconds * 1e-9
-
         # get velocity commands and current state from wall following state machine
-        if side_range > 0.1:
-            velocity_x, velocity_y, yaw_rate, state_wf = self.wall_following.wall_follower(
-                front_range, side_range, actual_yaw_rad, wf_dir, time_now)
-
-
+        velocity_x, velocity_y, yaw_rate = self.wall_following.path_finder(x_pos, y_pos, actual_yaw_rad)
+        #print(f"== DEBUG ==> path finder: {round(velocity_x, 2)}, {round(velocity_y, 2)}, {round(yaw_rate, 2)}")
 
         msg = Twist()
         msg.linear.x = velocity_x
@@ -162,7 +143,6 @@ class PathFinderController(Node):
         self.ranges = msg.ranges
 
 def main(args=None):
-
     rclpy.init(args=args)
     wall_following_multiranger = PathFinderController()
     rclpy.spin(wall_following_multiranger)
