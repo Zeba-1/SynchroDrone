@@ -27,15 +27,19 @@ obstacles = [(3, 3), (3, 4), (4, 3), (7, 7), (7, 8), (8, 7)]
 num_drones = 3
 starts_position = [(3, 4), (5, 4), (1, 5)]  # Positions initiales des drones
 goals_position = [(8, 1), (0,5), (5, 6)]  # Cible en bas à droite de la grille
-q_tables = [np.zeros((grid_size, grid_size, 5)) for _ in range(num_drones)]  # Q-tables pour chaque drone
+q_tables = [np.zeros((grid_size, grid_size, 9)) for _ in range(num_drones)]  # Q-tables pour chaque drone
 
 # Actions possibles (haut, bas, gauche, droite)
 actions = {
-    0: (-1, 0),  # Haut
-    1: (1, 0),   # Bas
-    2: (0, -1),  # Gauche
-    3: (0, 1),   # Droite
-    4: (0, 0)    # Reste sur place
+    0: (-1, 0),   # Haut
+    1: (1, 0),    # Bas
+    2: (0, -1),   # Gauche
+    3: (0, 1),    # Droite
+    4: (-1, -1),  # Diagonale haut-gauche
+    5: (-1, 1),   # Diagonale haut-droite
+    6: (1, -1),   # Diagonale bas-gauche
+    7: (1, 1),    # Diagonale bas-droite
+    8: (0, 0)     # Reste sur place
 }
 
 def get_next_position(state, action):
@@ -48,14 +52,31 @@ def get_next_position(state, action):
         return state  # Si hors grille, rester à la même position
     return (row, col)
 
-def get_reward(state, drone_id, positions):
+def get_reward(state, drone_id, positions, action):
     """Fonction de récompense spécifique pour chaque drone."""
+    if action in [4, 5, 6, 7]:
+        gauche = (state[0], state[1] - 1)
+        droite = (state[0], state[1] + 1)
+        haut = (state[0] - 1, state[1])
+        bas = (state[0] + 1, state[1])
+
+        if action == 4 and (droite in obstacles or bas in obstacles):
+                return -80
+        elif action == 5 and (gauche in obstacles or bas in obstacles):
+                return -80
+        elif action == 6 and (droite in obstacles or haut in obstacles):
+                return -80
+        elif action == 7 and (gauche in obstacles or haut in obstacles):
+                return -80
+        
     if state == goals_position[drone_id]:
         return 100  # Récompense pour atteindre l'objectif
     elif state in obstacles:
         return -80 # Pénalité pour collision avec un obstacle
     elif state in positions and positions[state] != drone_id:
         return -30 # Pénalité pour collision avec un autre drone
+    elif action in [4, 5, 6, 7]:
+        return -1.5
     else:
         return -1  # Pénalité par défaut pour chaque mouvement
 
@@ -86,7 +107,7 @@ def train_multi_agent(episodes):
                 next_state = get_next_position(state, action)
 
                 # Calculer la récompense pour ce drone
-                reward = get_reward(next_state, i, positions)
+                reward = get_reward(next_state, i, positions, action)
 
                 # Mettre à jour la Q-table avec la formule du Q-learning
                 row, col = state
@@ -107,7 +128,7 @@ def train_multi_agent(episodes):
         print(f"Épisode {episode + 1}: Récompenses totales = {total_rewards}")
 
 # Lancer l'apprentissage multi-agent sur 1000 épisodes
-train_multi_agent(episodes=5000)
+train_multi_agent(episodes=10000)
 
 # Trajectoire optimale pour chaque drone
 def find_optimal_paths():
