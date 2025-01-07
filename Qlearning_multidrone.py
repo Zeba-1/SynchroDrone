@@ -18,15 +18,28 @@ obstacles = [(0, 4), (0, 9), (0, 10),
             (5, 5),
             (6, 0), (6, 1), (6, 2), (6, 3), (6, 4), (6, 5),
             (8, 0), (8, 2)]  # Ensemble d'obstacles
+
+num_drones = 3
+starts_position = [(3, 4), (5, 4), (1, 5)]  # Positions initiales des drones
+goals_position = [(8, 1), (0,5), (5, 6)]  # Cible en bas à droite de la grille
+
+grid_size = grid_size * 2
+goals_position = [(goal[0] * 2, goal[1] * 2) for goal in goals_position]
+starts_position = [(start[0] * 2, start[1] * 2) for start in starts_position]
+new_obstacles = []
+for obs in obstacles:
+    new_obstacles.append((obs[0] * 2, obs[1] * 2))
+    new_obstacles.append((obs[0] * 2 + 1, obs[1] * 2))
+    new_obstacles.append((obs[0] * 2, obs[1] * 2 + 1))
+    new_obstacles.append((obs[0] * 2 + 1, obs[1] * 2 + 1))
+obstacles = new_obstacles
+
 """
 # Définition de l'environnement
 goal_position = (9, 9)
 obstacles = [(3, 3), (3, 4), (4, 3), (7, 7), (7, 8), (8, 7)]
 """
 # Drones
-num_drones = 3
-starts_position = [(3, 4), (5, 4), (1, 5)]  # Positions initiales des drones
-goals_position = [(8, 1), (0,5), (5, 6)]  # Cible en bas à droite de la grille
 q_tables = [np.zeros((grid_size, grid_size, 9)) for _ in range(num_drones)]  # Q-tables pour chaque drone
 
 # Actions possibles (haut, bas, gauche, droite)
