@@ -1,4 +1,4 @@
-
+# 
 
 class Grid:
     def __init__(self, file_name:str):
@@ -6,8 +6,8 @@ class Grid:
         self.grid = []
         self.grid_size_x = 0
         self.grid_size_y = 0
-        self.start = (0, 0)
-        self.end = (0, 0)
+        self.start = []
+        self.end = []
         self.walls = []
         self.wall_relation_horz = {}
         self.wall_relation_vert = {}
@@ -27,15 +27,32 @@ class Grid:
             data[i] = [j for j in data[i] if j != ' ']
 
         self.grid = self.reverse_grid(data)        
-
+        dict_tmp = {}
         for i in range(len(self.grid)):
             for j in range(len(self.grid[i])):
-                if self.grid[i][j] == 'o':
-                    self.start = (i, j)
-                elif self.grid[i][j] == 'X':
-                    self.end = (i, j)
-                elif self.grid[i][j] == '1':
+                if self.grid[i][j] == '1':
                     self.walls.append((i, j))
+                # si la lettre est en majuscule et est dans l'aphabet 
+                elif self.grid[i][j].isupper() and self.grid[i][j].isalpha():
+                    if self.grid[i][j] not in dict_tmp:
+                        dict_tmp[self.grid[i][j]] = [(0,0),(0,0)]
+                    # ajouter en premiere position
+                    print("start:",self.grid[i][j])
+                    dict_tmp[self.grid[i][j]][0] = (i, j)
+        
+                elif self.grid[i][j].islower() and self.grid[i][j].isalpha():
+                    if self.grid[i][j].upper() not in dict_tmp:
+                        dict_tmp[self.grid[i][j].upper()] = [(0,0),(0,0)]
+                    # ajouter en deuxieme position
+                    print("end:",self.grid[i][j])
+                    dict_tmp[self.grid[i][j].upper()][1] = (i, j)
+                else:
+                    pass
+
+        for key in dict_tmp:
+            self.start.append(dict_tmp[key][0])
+            self.end.append(dict_tmp[key][1])
+                    
             
 
     def reverse_grid(self, data)->list:
@@ -43,8 +60,7 @@ class Grid:
         return data
            
     def create_file_sdf(self):
-        x_start = self.start[0] - 0.5
-        y_start = self.start[1] + 0.5
+        start_list = [(start[0] - 0.5, start[1] + 0.5) for start in self.start]
         #self.get_wall_relation()
         with open('grid_1.sdf', 'w') as f:
             f.write('<?xml version="1.0"?>\n')
@@ -75,37 +91,40 @@ class Grid:
             f.write('    </light>\n')
 
             #MAP
-            f.write('<model name="ground_plane">\n')
-            f.write('  <static>true</static>\n')
-            f.write('  <link name="link">\n')
-            f.write('    <collision name="collision">\n')
-            f.write('      <geometry>\n')
-            f.write('        <plane>\n')
-            f.write('          <normal>0 0 1</normal>\n')
-            f.write('          <size>100 100</size>\n')
-            f.write('        </plane>\n')
-            f.write('      </geometry>\n')
-            f.write('    </collision>\n')
-            f.write('    <visual name="visual">\n')
-            f.write('      <geometry>\n')
-            f.write('        <plane>\n')
-            f.write('          <normal>0 0 1</normal>\n')
-            f.write('          <size>100 100</size>\n')
-            f.write('        </plane>\n')
-            f.write('      </geometry>\n')
-            f.write('      <material>\n')
-            f.write('        <ambient>0.8 0.8 0.8 1</ambient>\n')
-            f.write('        <diffuse>0.8 0.8 0.8 1</diffuse>\n')
-            f.write('        <specular>0.8 0.8 0.8 1</specular>\n')
-            f.write('      </material>\n')
-            f.write('    </visual>\n')
-            f.write('  </link>\n')
-            f.write('</model>\n')
-            f.write('<include>\n')
-            f.write('  <uri>model://crazyflie</uri>\n')
-            f.write('  <name>crazyflie</name>\n')
-            f.write(f'  <pose>{x_start} {y_start} 0 0 0 0</pose>\n')
-            f.write('</include>\n')
+
+            for x_start,y_start in start_list:
+                i = start_list.index((x_start,y_start))
+                f.write('<model name="ground_plane">\n')
+                f.write('  <static>true</static>\n')
+                f.write('  <link name="link">\n')
+                f.write('    <collision name="collision">\n')
+                f.write('      <geometry>\n')
+                f.write('        <plane>\n')
+                f.write('          <normal>0 0 1</normal>\n')
+                f.write('          <size>100 100</size>\n')
+                f.write('        </plane>\n')
+                f.write('      </geometry>\n')
+                f.write('    </collision>\n')
+                f.write('    <visual name="visual">\n')
+                f.write('      <geometry>\n')
+                f.write('        <plane>\n')
+                f.write('          <normal>0 0 1</normal>\n')
+                f.write('          <size>100 100</size>\n')
+                f.write('        </plane>\n')
+                f.write('      </geometry>\n')
+                f.write('      <material>\n')
+                f.write('        <ambient>0.8 0.8 0.8 1</ambient>\n')
+                f.write('        <diffuse>0.8 0.8 0.8 1</diffuse>\n')
+                f.write('        <specular>0.8 0.8 0.8 1</specular>\n')
+                f.write('      </material>\n')
+                f.write('    </visual>\n')
+                f.write('  </link>\n')
+                f.write('</model>\n')
+                f.write('<include>\n')
+                f.write('  <uri>model://crazyflie</uri>\n')
+                f.write(f'  <name>crazyflie_{i}\n')
+                f.write(f'  <pose>{x_start} {y_start} 0 0 0 0</pose>\n')
+                f.write('</include>\n')
 
             for wall in self.walls:
                 x_mid = wall[0] - 0.5
