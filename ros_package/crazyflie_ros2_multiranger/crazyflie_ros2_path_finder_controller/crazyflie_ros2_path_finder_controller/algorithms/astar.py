@@ -43,7 +43,7 @@ class A_star:
                 neighbors.append(new_position)
         return neighbors
 
-    def find_optimal_path(self):
+    def find_optimal_paths(self):
         """Algorithme A* pour trouver le chemin optimal de start à goal dans une grille 2D."""
         start = self.start_position
         goal = self.goal_position
@@ -62,7 +62,7 @@ class A_star:
                     current = came_from[current]
                 path.append(start)
                 path.reverse()
-                return path
+                return [path]
             
             for neighbor in self.get_neighbors(current):
                 tentative_g_score = g_score[current] + 1

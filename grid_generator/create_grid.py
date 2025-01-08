@@ -26,7 +26,8 @@ class Grid:
         for i in range(len(data)):
             data[i] = [j for j in data[i] if j != ' ']
 
-        self.grid = self.reverse_grid(data)        
+        #self.grid = self.reverse_grid(data)        
+        self.grid = data
         dict_tmp = {}
         for i in range(len(self.grid)):
             for j in range(len(self.grid[i])):
@@ -89,48 +90,83 @@ class Grid:
             f.write('      </attenuation>\n')
             f.write('      <direction>-0.5 0.1 -0.9</direction>\n')
             f.write('    </light>\n')
-
-            #MAP
+            f.write('<model name="ground_plane">\n')
+            f.write('  <static>true</static>\n')
+            f.write('  <link name="link">\n')
+            f.write('    <collision name="collision">\n')
+            f.write('      <geometry>\n')
+            f.write('        <plane>\n')
+            f.write('          <normal>0 0 1</normal>\n')
+            f.write('          <size>100 100</size>\n')
+            f.write('        </plane>\n')
+            f.write('      </geometry>\n')
+            f.write('    </collision>\n')
+            f.write('    <visual name="visual">\n')
+            f.write('      <geometry>\n')
+            f.write('        <plane>\n')
+            f.write('          <normal>0 0 1</normal>\n')
+            f.write('          <size>100 100</size>\n')
+            f.write('        </plane>\n')
+            f.write('      </geometry>\n')
+            f.write('      <material>\n')
+            f.write('        <ambient>0.8 0.8 0.8 1</ambient>\n')
+            f.write('        <diffuse>0.8 0.8 0.8 1</diffuse>\n')
+            f.write('        <specular>0.8 0.8 0.8 1</specular>\n')
+            f.write('      </material>\n')
+            f.write('    </visual>\n')
+            f.write('  </link>\n')
+            f.write('</model>\n')
 
             for x_start,y_start in start_list:
                 i = start_list.index((x_start,y_start))
-                f.write('<model name="ground_plane">\n')
-                f.write('  <static>true</static>\n')
-                f.write('  <link name="link">\n')
-                f.write('    <collision name="collision">\n')
-                f.write('      <geometry>\n')
-                f.write('        <plane>\n')
-                f.write('          <normal>0 0 1</normal>\n')
-                f.write('          <size>100 100</size>\n')
-                f.write('        </plane>\n')
-                f.write('      </geometry>\n')
-                f.write('    </collision>\n')
-                f.write('    <visual name="visual">\n')
-                f.write('      <geometry>\n')
-                f.write('        <plane>\n')
-                f.write('          <normal>0 0 1</normal>\n')
-                f.write('          <size>100 100</size>\n')
-                f.write('        </plane>\n')
-                f.write('      </geometry>\n')
-                f.write('      <material>\n')
-                f.write('        <ambient>0.8 0.8 0.8 1</ambient>\n')
-                f.write('        <diffuse>0.8 0.8 0.8 1</diffuse>\n')
-                f.write('        <specular>0.8 0.8 0.8 1</specular>\n')
-                f.write('      </material>\n')
-                f.write('    </visual>\n')
-                f.write('  </link>\n')
-                f.write('</model>\n')
                 f.write('<include>\n')
                 f.write('  <uri>model://crazyflie</uri>\n')
-                f.write(f'  <name>crazyflie_{i}\n')
+                f.write(f'  <name>crazyflie{i}</name>\n')
                 f.write(f'  <pose>{x_start} {y_start} 0 0 0 0</pose>\n')
+                plugin = f'''<plugin
+                    filename="gz-sim-multicopter-control-system"
+                    name="gz::sim::systems::MulticopterVelocityControl">
+                    <robotNamespace>crazyflie</robotNamespace>
+                    <commandSubTopic>crazy{i}/twist</commandSubTopic>
+                    <enableSubTopic>enable</enableSubTopic>
+                    <comLinkName>crazyflie/body</comLinkName>
+                    <velocityGain>1.25 1.25 0.2425</velocityGain>
+                    <attitudeGain>0.02 0.02 0.02</attitudeGain>
+                    <angularRateGain>0.005 0.005 0.005</angularRateGain>
+                    <rotorConfiguration>
+                        <rotor>
+                        <jointName>crazyflie/m1_joint</jointName>
+                        <forceConstant>1.28192e-08</forceConstant>
+                        <momentConstant>0.005964552</momentConstant>
+                        <direction>1</direction>
+                        </rotor>
+                        <rotor>
+                        <jointName>crazyflie/m2_joint</jointName>
+                        <forceConstant>1.28192e-08</forceConstant>
+                        <momentConstant>0.005964552</momentConstant>
+                        <direction>-1</direction>
+                        </rotor>
+                        <rotor>
+                        <jointName>crazyflie/m3_joint</jointName>
+                        <forceConstant>1.28192e-08</forceConstant>
+                        <momentConstant>0.005964552</momentConstant>
+                        <direction>1</direction>
+                        </rotor>
+                        <rotor>
+                        <jointName>crazyflie/m4_joint</jointName>
+                        <forceConstant>1.28192e-08</forceConstant>
+                        <momentConstant>0.005964552</momentConstant>
+                        <direction>-1</direction>
+                        </rotor>
+                    </rotorConfiguration>
+                </plugin>'''
+                f.write(plugin)
                 f.write('</include>\n')
 
             for wall in self.walls:
                 x_mid = wall[0] - 0.5
                 y_mid = wall[1] + 0.5
                 key = self.walls.index(wall)
-
                 f.write(f'<model name="wall{key}">\n')
                 f.write(f'  <pose>{x_mid} {y_mid} 0.5 0 0 0</pose>\n')
                 f.write('  <static>true</static>\n')
@@ -144,8 +180,6 @@ class Grid:
                 f.write('    </visual>\n')
                 f.write('  </link>\n')
                 f.write('</model>\n\n')
-    
-
             f.write('  </world>\n')
             f.write('</sdf>\n')
 

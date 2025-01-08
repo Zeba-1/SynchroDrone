@@ -68,7 +68,8 @@ def generate_launch_description():
     for i in range(int(nbDrone_arg)):
         control = Node(
             package='ros_gz_crazyflie_control',
-            executable='control_services',
+            executable=f'control_services',
+            name=f'control_services{i}',
             output='screen',
             parameters=[
                 {'hover_height': 0.5},

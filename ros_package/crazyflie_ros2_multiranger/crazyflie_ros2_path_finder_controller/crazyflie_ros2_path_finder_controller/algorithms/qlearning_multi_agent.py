@@ -6,24 +6,17 @@ import time
 class QLrearning():
     def __init__(self, num_drones):
         # Paramètres de la grille et du Q-learning
-        self.grid_size = 11
+        self.grid_size = 10
         self.alpha = 0.1  # Taux d'apprentissage
         self.gamma = 0.9  # Facteur de discount
         self.epsilon = 0.1  # Taux d'exploration
 
-        self.grid_length, self.grid_width = 11, 11
-        self.obstacles = [(0, 4), (0, 9), (0, 10),
-                    (1, 4), (1, 9), (1, 10),
-                    (2, 0), (2, 4), (2, 5), (2, 9), (2, 10),
-                    (3, 5), (3, 9), (3, 10),
-                    (4, 9), (4, 10),
-                    (5, 5),
-                    (6, 0), (6, 1), (6, 2), (6, 3), (6, 4), (6, 5),
-                    (8, 0), (8, 2)]  # Ensemble d'obstacles
+        self.grid_length, self.grid_width = 10, 10
+        self.obstacles = [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7), (0, 8), (0, 9), (1, 0), (1, 5), (1, 6), (2, 0), (2, 5), (2, 6), (2, 9), (3, 0), (3, 5), (3, 9), (4, 0), (4, 9), (5, 0), (5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 8), (5, 9), (6, 0), (6, 9), (7, 0), (7, 1), (7, 2), (7, 6), (7, 7), (7, 9), (8, 0), (8, 9), (9, 0), (9, 1), (9, 2), (9, 3), (9, 4), (9, 5), (9, 6), (9, 7), (9, 8), (9, 9)]    # Ensemble d'obstacles
 
         self.num_drones = num_drones
-        self.starts_position = [(3, 4), (5, 4), (1, 5)]  # Positions initiales des drones
-        self.goals_position = [(8, 1), (0,5), (5, 6)]  # Cible en bas à droite de la grille
+        self.starts_position = [(1, 1), (4, 1)]  # Positions initiales des drones
+        self.goals_position = [(8, 1), (1, 8)]  # Cible en bas à droite de la grille
 
         # grid_size = grid_size * 2
         # goals_position = [(goal[0] * 2, goal[1] * 2) for goal in goals_position]
@@ -135,7 +128,7 @@ class QLrearning():
                     total_rewards[i] += reward
 
             # Affichage des récompenses totales pour observer l'apprentissage
-            print(f"Épisode {episode + 1}: Récompenses totales = {total_rewards}")
+            # print(f"Épisode {episode + 1}: Récompenses totales = {total_rewards}")
 
     # Trajectoire optimale pour chaque drone
     def find_optimal_paths(self):

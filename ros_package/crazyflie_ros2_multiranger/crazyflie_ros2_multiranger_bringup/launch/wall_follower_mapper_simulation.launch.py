@@ -39,7 +39,7 @@ def generate_launch_description():
         output='screen',
         parameters=[
             {'robot_prefix': drone_name},
-            {'use_sim_time': True},
+            {'use_sim_time': False},
             {'delay': 5.0},
             {'max_turn_rate': 0.7},
             {'max_forward_speed': 0.5},

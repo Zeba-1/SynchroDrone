@@ -38,7 +38,7 @@ class PathFinderController(Node):
 
         self.declare_parameter('robot_prefix', ['/crazyflie0'])
         drones = self.get_parameter('robot_prefix').value
-        print(f"== DEBUG ==> drones: {drones}")
+        self.get_logger().info(f"== DEBUG ==> drones: {drones}")
         self.nb_drones = len(drones)
 
         self.declare_parameter('delay', 5.0)
@@ -54,11 +54,14 @@ class PathFinderController(Node):
         self.position = []
         self.angles = []
         self.twist_publisher = []
+        self.odom_subscriber = []
         for robot_prefix in drones:
             robot_index = int(robot_prefix[-1])
-
-            self.odom_subscriber = self.create_subscription(
-                Odometry, robot_prefix + '/odom', lambda msg : self.odom_subscribe_callback(msg, robot_index), 10)
+            self.get_logger().info(f"== DEBUG ==> {robot_prefix}/odom !")
+            if robot_index == 0:
+                self.odom_subscriber.append(self.create_subscription(Odometry, f"{robot_prefix}/odom", self.odom_subscribe_callback, 10))
+            else:
+                self.odom_subscriber.append(self.create_subscription(Odometry, f"{robot_prefix}/odom", self.odom_subscribe_callback1, 10))
             
             self.twist_publisher.append(self.create_publisher(Twist, f'/cmd_vel{robot_index}', 10))
 
@@ -68,18 +71,16 @@ class PathFinderController(Node):
             self.position.append([0.0, 0.0, 0.0])
             self.angles.append([0.0, 0.0, 0.0])
 
-        
-
-        self.get_logger().info(f"Wall following set for crazyflie " + robot_prefix +
-                               f" using the scan topic with a delay of {self.delay} seconds")
+        self.position_update = False
         
         ## Fin de l'initialisation du Node
 
+        # Initialize wall following state machine
+        self.wall_following = PathFinder(self.nb_drones, self.get_logger())
+        self.get_logger().info(f"== DEBUG ==> Pathfinding completed")
+
         # Create a timer to run the wall following state machine
         self.timer = self.create_timer(0.01, self.timer_callback)
-
-        # Initialize wall following state machine
-        self.wall_following = PathFinder(self.nb_drones)
 
         # Give a take off command but wait for the delay to start the wall following
         self.wait_for_start = True
@@ -105,7 +106,6 @@ class PathFinderController(Node):
 
     # Fonctione appeler a chaque fois que le timer est declenche
     def timer_callback(self):
-
         # On attend le temps de delay avant de commencer le path finding
         if self.wait_for_start:
             if self.get_clock().now().nanoseconds * 1e-9 - self.start_clock > self.delay:
@@ -137,15 +137,29 @@ class PathFinderController(Node):
             msg.angular.z = yaw_rate
             self.twist_publisher[i].publish(msg)
 
-    def odom_subscribe_callback(self, msg, robot_index):
-        self.position[robot_index][0] = msg.pose.pose.position.x
-        self.position[robot_index][1] = msg.pose.pose.position.y
-        self.position[robot_index][2] = msg.pose.pose.position.z
+    def odom_subscribe_callback(self, msg):
+        self.get_logger().info(f"== DEBUG ==> Odom received for {0} : {msg.pose.pose.position.x}, {msg.pose.pose.position.y}")
+        self.position[0][0] = msg.pose.pose.position.x
+        self.position[0][1] = msg.pose.pose.position.y
+        self.position[0][2] = msg.pose.pose.position.z
         q = msg.pose.pose.orientation
         euler = tf_transformations.euler_from_quaternion([q.x, q.y, q.z, q.w])
-        self.angles[robot_index][0] = euler[0]
-        self.angles[robot_index][1] = euler[1]
-        self.angles[robot_index][2] = euler[2]
+        self.angles[0][0] = euler[0]
+        self.angles[0][1] = euler[1]
+        self.angles[0][2] = euler[2]
+        self.position_updated = True
+
+    def odom_subscribe_callback1(self, msg):
+        self.get_logger().info(f"== DEBUG ==> Odom received for {1} : {msg.pose.pose.position.x}, {msg.pose.pose.position.y}")
+        self.position[1][0] = msg.pose.pose.position.x
+        self.position[1][1] = msg.pose.pose.position.y
+        self.position[1][2] = msg.pose.pose.position.z
+        q = msg.pose.pose.orientation
+        euler = tf_transformations.euler_from_quaternion([q.x, q.y, q.z, q.w])
+        self.angles[1][0] = euler[0]
+        self.angles[1][1] = euler[1]
+        self.angles[1][2] = euler[2]
+        self.position_updated = True
 
     def scan_subscribe_callback(self, msg):
         self.ranges = msg.ranges
