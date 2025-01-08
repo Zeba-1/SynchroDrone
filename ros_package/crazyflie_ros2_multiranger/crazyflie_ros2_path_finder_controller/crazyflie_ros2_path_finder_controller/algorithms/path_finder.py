@@ -1,16 +1,20 @@
 import math
 from enum import Enum
 from .astar import A_star
+from .qlearning_multi_agent import *
 
 
 class PathFinder():
-    def __init__(self, algo="astar"):
-        if algo == "astar":
+    def __init__(self, nb_drones):
+        self.nb_drones = nb_drones
+        if nb_drones == 1:
             self.algo = A_star()
+        #elif nb_drones >= 2:
+        #    self.algo = QLearning(nb_drones);
 
-        self.path_goal = 0
+        self.path_goal = [0] * nb_drones
 
-        self.finished = False
+        self.finished = [False] * nb_drones
 
         self.path = self.algo.find_optimal_path()
         print("=== debug ===> optimal path:" + str(self.path))
@@ -32,25 +36,31 @@ class PathFinder():
         return math.sqrt((x_goal - x_pos)**2 + (y_goal - y_pos)**2) < 0.1
 
     # Wall following State machine
-    def path_finder(self, x_pos, y_pos, current_heading):
-        if self.finished:
-            return 0., 0., 0.
-        
-        x_goal, y_goal = self.grid_to_world(self.path[self.path_goal])
-        desired_heading = self.get_heading(x_pos, y_pos, x_goal, y_goal)
+    def path_finder(self, positions):
+        results = [(0., 0., 0.)] * self.nb_drones
+        for i in range(self.nb_drones):
+            x_pos, y_pos, current_heading = positions[i]
 
-        if self.have_reached_goal(x_pos, y_pos, x_goal, y_goal):
-            self.path_goal += 1
-            if self.path_goal >= len(self.path):
-                self.finished = True
-                print(f"== DEBUG ==> FINISHED")
-                return 0., 0., 0.
-            print(f"== DEBUG ==> Nex goal: {self.path_goal} = {self.path[self.path_goal]}")
+            if self.finished[i]:
+                results[i] = (0., 0., 0.)
             
+            x_goal, y_goal = self.grid_to_world(self.path[i][self.path_goal[i]])
+            desired_heading = self.get_heading(x_pos, y_pos, x_goal, y_goal)
 
-        correct_heading = self.correct_heading(current_heading, desired_heading)
+            if self.have_reached_goal(x_pos, y_pos, x_goal, y_goal):
+                self.path_goal[i] += 1
+                if self.path_goal[i] >= len(self.path):
+                    self.finished[i] = True
+                    print(f"== DEBUG ==> {i} FINISHED")
+                    results[i] = (0., 0., 0.)
+                print(f"== DEBUG ==> Nex goal for {i}: {self.path_goal[i]} = {self.path[i][self.path_goal[i]]}")
+                
 
-        if abs(desired_heading - current_heading) < 0.1:
-            return 1., 0., correct_heading
-        else:
-            return 0., 0., correct_heading
+            correct_heading = self.correct_heading(current_heading, desired_heading)
+
+            if abs(desired_heading - current_heading) < 0.1:
+                results[i] = (0.5, 0., correct_heading)
+            else:
+                results[i] = (0., 0., correct_heading)
+
+        return results

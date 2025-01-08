@@ -12,9 +12,11 @@ from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 
 from launch_ros.actions import Node
 
+NB_DRONES = 2
 
 def generate_launch_description():
-    # Configure ROS nodes for launch
+
+    os.environ['NB_DRONES'] = str(NB_DRONES)
 
     # Setup project paths
     pkg_project_crazyflie_gazebo = get_package_share_directory('ros_gz_crazyflie_bringup')
@@ -22,8 +24,12 @@ def generate_launch_description():
     # Setup to launch a crazyflie gazebo simulation from the ros_gz_crazyflie project
     crazyflie_simulation = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(pkg_project_crazyflie_gazebo, 'launch', 'crazyflie_simulation.launch.py'))
+            os.path.join(pkg_project_crazyflie_gazebo, 'launch', 'crazyflie_simulation.launch.py')) ,
     )
+
+    drone_name = []
+    for i in range(NB_DRONES):
+        drone_name.append('crazyflie' + str(i))
 
     # start a path finder node with a delay of 5 seconds
     wall_following = Node(
@@ -32,7 +38,7 @@ def generate_launch_description():
         name='path_finder_controller',
         output='screen',
         parameters=[
-            {'robot_prefix': 'crazyflie'},
+            {'robot_prefix': drone_name},
             {'use_sim_time': True},
             {'delay': 5.0},
             {'max_turn_rate': 0.7},

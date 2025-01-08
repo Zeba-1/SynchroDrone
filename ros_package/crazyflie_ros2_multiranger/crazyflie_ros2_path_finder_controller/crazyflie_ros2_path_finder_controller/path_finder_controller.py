@@ -35,8 +35,12 @@ class PathFinderController(Node):
 
         ## Initialisation du Node
         super().__init__('simple_mapper_multiranger')
-        self.declare_parameter('robot_prefix', '/crazyflie')
-        robot_prefix = self.get_parameter('robot_prefix').value
+
+        self.declare_parameter('robot_prefix', ['/crazyflie0'])
+        drones = self.get_parameter('robot_prefix').value
+        print(f"== DEBUG ==> drones: {drones}")
+        self.nb_drones = len(drones)
+
         self.declare_parameter('delay', 5.0)
         self.delay = self.get_parameter('delay').value
         self.declare_parameter('max_turn_rate', 0.5)
@@ -46,21 +50,25 @@ class PathFinderController(Node):
         self.declare_parameter('wall_following_direction', 'right')
         self.wall_following_direction = self.get_parameter('wall_following_direction').value
 
-        self.odom_subscriber = self.create_subscription(
-            Odometry, robot_prefix + '/odom', self.odom_subscribe_callback, 10)
-        self.ranges_subscriber = self.create_subscription(
-            LaserScan, robot_prefix + '/scan', self.scan_subscribe_callback, 10)
 
-        # add service to stop wall following and make the crazyflie land
-        self.srv = self.create_service(Trigger, robot_prefix + '/stop_wall_following', self.stop_wall_following_cb)
+        self.position = []
+        self.angles = []
+        self.twist_publisher = []
+        for robot_prefix in drones:
+            robot_index = int(robot_prefix[-1])
 
-        self.position = [0.0, 0.0, 0.0]
-        self.angles = [0.0, 0.0, 0.0]
-        self.ranges = [0.0, 0.0, 0.0, 0.0]
+            self.odom_subscriber = self.create_subscription(
+                Odometry, robot_prefix + '/odom', lambda msg : self.odom_subscribe_callback(msg, robot_index), 10)
+            
+            self.twist_publisher.append(self.create_publisher(Twist, f'/cmd_vel{robot_index}', 10))
 
-        self.position_update = False
+            # add service to stop wall following and make the crazyflie land
+            self.srv = self.create_service(Trigger, robot_prefix + '/stop_wall_following', self.stop_wall_following_cb)
 
-        self.twist_publisher = self.create_publisher(Twist, '/cmd_vel', 10)
+            self.position.append([0.0, 0.0, 0.0])
+            self.angles.append([0.0, 0.0, 0.0])
+
+        
 
         self.get_logger().info(f"Wall following set for crazyflie " + robot_prefix +
                                f" using the scan topic with a delay of {self.delay} seconds")
@@ -71,14 +79,15 @@ class PathFinderController(Node):
         self.timer = self.create_timer(0.01, self.timer_callback)
 
         # Initialize wall following state machine
-        self.wall_following = PathFinder()
+        self.wall_following = PathFinder(self.nb_drones)
 
         # Give a take off command but wait for the delay to start the wall following
         self.wait_for_start = True
         self.start_clock = self.get_clock().now().nanoseconds * 1e-9
         msg = Twist()
         msg.linear.z = 1.
-        self.twist_publisher.publish(msg)
+        for pub in self.twist_publisher:
+            pub.publish(msg)
 
     def stop_wall_following_cb(self, request, response):
         self.get_logger().info('Stopping wall following')
@@ -105,39 +114,38 @@ class PathFinderController(Node):
             else:
                 return
 
-        # initialize variables
-        velocity_x = 0.0
-        velocity_y = 0.0
-        yaw_rate = 0.0
+        positions = []
+        for i in range(self.nb_drones):
+            # Get position
+            x_pos = self.position[i][0]
+            y_pos = self.position[i][1]
 
-        # Get position
-        x_pos = self.position[0]
-        y_pos = self.position[1]
-        #print(f"== DEBUG ==> Position: {round(x_pos, 2)}, {round(y_pos, 2)}")
+            # Get Yaw
+            actual_yaw_rad = self.angles[i][2]
 
-        # Get Yaw
-        actual_yaw_rad = self.angles[2]
+            positions.append((x_pos, y_pos, actual_yaw_rad))
+
 
         # get velocity commands and current state from wall following state machine
-        velocity_x, velocity_y, yaw_rate = self.wall_following.path_finder(x_pos, y_pos, actual_yaw_rad)
-        #print(f"== DEBUG ==> path finder: {round(velocity_x, 2)}, {round(velocity_y, 2)}, {round(yaw_rate, 2)}")
+        velocities = self.wall_following.path_finder(positions)
 
-        msg = Twist()
-        msg.linear.x = velocity_x
-        msg.linear.y = velocity_y
-        msg.angular.z = yaw_rate
-        self.twist_publisher.publish(msg)
+        for i in range(self.nb_drones):
+            x_vel, y_vel, yaw_rate = velocities[i]
+            msg = Twist()
+            msg.linear.x = x_vel
+            msg.linear.y = y_vel
+            msg.angular.z = yaw_rate
+            self.twist_publisher[i].publish(msg)
 
-    def odom_subscribe_callback(self, msg):
-        self.position[0] = msg.pose.pose.position.x
-        self.position[1] = msg.pose.pose.position.y
-        self.position[2] = msg.pose.pose.position.z
+    def odom_subscribe_callback(self, msg, robot_index):
+        self.position[robot_index][0] = msg.pose.pose.position.x
+        self.position[robot_index][1] = msg.pose.pose.position.y
+        self.position[robot_index][2] = msg.pose.pose.position.z
         q = msg.pose.pose.orientation
         euler = tf_transformations.euler_from_quaternion([q.x, q.y, q.z, q.w])
-        self.angles[0] = euler[0]
-        self.angles[1] = euler[1]
-        self.angles[2] = euler[2]
-        self.position_update = True
+        self.angles[robot_index][0] = euler[0]
+        self.angles[robot_index][1] = euler[1]
+        self.angles[robot_index][2] = euler[2]
 
     def scan_subscribe_callback(self, msg):
         self.ranges = msg.ranges
