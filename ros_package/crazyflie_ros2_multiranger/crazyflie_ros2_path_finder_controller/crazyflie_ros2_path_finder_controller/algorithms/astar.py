@@ -1,3 +1,4 @@
+from pathlib import Path
 import numpy as np
 import random
 import heapq
@@ -6,17 +7,38 @@ class A_star:
     def __init__(self):
         # Paramètres de l'environnement 2D et du Q-learning
         self.grid_length, self.grid_width = 10, 10
-        self.start_position = (1, 1)  # Départ en haut à gauche de la grille
-        self.goal_position = (3, 3)  # Cible en bas à droite de la grille
-        self.obstacles = {(0, 0), (0, 1), (0, 2),
-                          (1, 0), (1, 2),
-                          (2, 0), (2, 2), (2, 3),
-                          (3, 0),
-                          (4, 0), (4, 1), (4, 2), (4, 3)}  # Ensemble d'obstacles
-        # Q-learning parameters
-        self.alpha = 0.1 # Taux d'apprentissage
-        self.gamma = 0.9  # Facteur de discount
-        self.epsilon = 0.1  # Taux d'exploration
+        self.start_position = []  # Départ en haut à gauche de la grille
+        self.goal_position = [] # Cible en bas à droite de la grille
+        self.obstacles = []  # Ensemble d'obstacles
+
+        script_dir = Path(__file__).resolve().parent
+        file_path = script_dir / "setup.txt"
+        with open(file_path, 'r') as f:
+            start_line = f.readline().strip()
+            start_positions = start_line.split('-')
+            for pos in start_positions:
+                if pos == '': continue
+                x, y = pos.split('.')
+                self.start_position.append((int(x), int(y)))
+
+            end_line = f.readline().strip()
+            end_positions = end_line.split('-')
+            for pos in end_positions:
+                if pos == '': continue
+                x, y = pos.split('.')
+                self.goal_position.append((int(x), int(y)))
+
+            wall_line = f.readline().strip()
+            wall_positions = wall_line.split('-')
+            for pos in wall_positions:
+                if pos == '': continue
+                x, y = pos.split('.')
+                self.obstacles.append((int(x), int(y)))
+
+        print(self.start_position)
+        print(self.goal_position)
+        print(self.obstacles)
+
         self.actions = {
             0: (1, 0),  # Haut
             1: (-1, 0),   # Bas
@@ -76,3 +98,6 @@ class A_star:
                         heapq.heappush(open_set, (f_score[neighbor], neighbor))
         
         return None
+    
+if __name__ == "__main__":
+    astart = A_star()

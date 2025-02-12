@@ -1,3 +1,4 @@
+from pathlib import Path
 import numpy as np
 import random
 import matplotlib.pyplot as plt
@@ -6,18 +7,46 @@ import time
 class QLrearning():
     def __init__(self, num_drones):
         # Paramètres de la grille et du Q-learning
+        self.num_drones = num_drones
         self.grid_size = 10
         self.alpha = 0.1  # Taux d'apprentissage
         self.gamma = 0.9  # Facteur de discount
         self.epsilon = 0.1  # Taux d'exploration
 
         self.grid_length, self.grid_width = 10, 10
-        self.obstacles = [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7), (0, 8), (0, 9), (1, 0), (1, 5), (1, 6), (2, 0), (2, 5), (2, 6), (2, 9), (3, 0), (3, 5), (3, 9), (4, 0), (4, 9), (5, 0), (5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 8), (5, 9), (6, 0), (6, 9), (7, 0), (7, 1), (7, 2), (7, 6), (7, 7), (7, 9), (8, 0), (8, 9), (9, 0), (9, 1), (9, 2), (9, 3), (9, 4), (9, 5), (9, 6), (9, 7), (9, 8), (9, 9)]    # Ensemble d'obstacles
+        self.obstacles = []
+        self.starts_position = []  # Positions initiales des drones
+        self.goals_position = []  # Cible en bas à droite de la grille
 
-        self.num_drones = num_drones
-        self.starts_position = [(1, 1), (4, 1)]  # Positions initiales des drones
-        self.goals_position = [(8, 1), (1, 8)]  # Cible en bas à droite de la grille
+        script_dir = Path(__file__).resolve().parent
+        file_path = script_dir / "setup.txt"
+        with open(file_path, 'r') as f:
+            start_line = f.readline().strip()
+            start_positions = start_line.split('-')
+            for pos in start_positions:
+                if pos == '': continue
+                x, y = pos.split('.')
+                self.starts_position.append((int(x), int(y)))
 
+            end_line = f.readline().strip()
+            end_positions = end_line.split('-')
+            for pos in end_positions:
+                if pos == '': continue
+                x, y = pos.split('.')
+                self.goals_position.append((int(x), int(y)))
+
+            wall_line = f.readline().strip()
+            wall_positions = wall_line.split('-')
+            for pos in wall_positions:
+                if pos == '': continue
+                x, y = pos.split('.')
+                self.obstacles.append((int(x), int(y)))
+
+        print(self.starts_position)
+        print(self.goals_position)
+        print(self.obstacles)
+
+        ## Grid division by two
         # grid_size = grid_size * 2
         # goals_position = [(goal[0] * 2, goal[1] * 2) for goal in goals_position]
         # starts_position = [(start[0] * 2, start[1] * 2) for start in starts_position]
@@ -149,3 +178,7 @@ class QLrearning():
                 steps += 1
             paths.append(path)
         return paths
+    
+
+if __name__ == "__main__":
+     ql = QLrearning(num_drones=2)

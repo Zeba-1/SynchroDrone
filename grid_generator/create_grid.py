@@ -1,4 +1,5 @@
-# 
+import os
+
 
 class Grid:
     def __init__(self, file_name:str):
@@ -38,14 +39,12 @@ class Grid:
                     if self.grid[i][j] not in dict_tmp:
                         dict_tmp[self.grid[i][j]] = [(0,0),(0,0)]
                     # ajouter en premiere position
-                    print("start:",self.grid[i][j])
                     dict_tmp[self.grid[i][j]][0] = (i, j)
         
                 elif self.grid[i][j].islower() and self.grid[i][j].isalpha():
                     if self.grid[i][j].upper() not in dict_tmp:
                         dict_tmp[self.grid[i][j].upper()] = [(0,0),(0,0)]
                     # ajouter en deuxieme position
-                    print("end:",self.grid[i][j])
                     dict_tmp[self.grid[i][j].upper()][1] = (i, j)
                 else:
                     pass
@@ -63,7 +62,7 @@ class Grid:
     def create_file_sdf(self):
         start_list = [(start[0] - 0.5, start[1] + 0.5) for start in self.start]
         #self.get_wall_relation()
-        with open('grid_1.sdf', 'w') as f:
+        with open('../ros_package/ros_gz_crazyflie/ros_gz_crazyflie_gazebo/worlds/crazyflie_world.sdf', 'w') as f:
             f.write('<?xml version="1.0"?>\n')
             
             f.write('<sdf version="1.8">\n')
@@ -183,16 +182,24 @@ class Grid:
             f.write('  </world>\n')
             f.write('</sdf>\n')
 
-    def create_file_txt(self):
-        with open('wall_list.txt', 'w') as f:
-            f.write(self.start)
-            f.write(self.end)
-            f.write(self.walls)
+    def create_setup_file(self):
+        with open('../ros_package/crazyflie_ros2_multiranger/crazyflie_ros2_path_finder_controller/crazyflie_ros2_path_finder_controller/algorithms/setup.txt', 'w') as f:
+            for start in self.start:
+                f.write(str(start[0]) + "." + str(start[1]) + "-")
+            f.write("\n")
+            for end in self.end:
+                f.write(str(end[0]) + "." + str(end[1]) + "-")
+            f.write("\n")
+            for wall in self.walls:
+                f.write(str(wall[0]) + "." + str(wall[1]) + "-")
+            f.write("\n")
 
 if __name__ == '__main__':
     grid = Grid('grid.txt')
     grid.file_to_list()
     print(grid.walls)
-    print("start:",grid.start)
-    print("end:",grid.end)
+    print("start:", grid.start)
+    print("end:", grid.end)
     grid.create_file_sdf()
+    os.environ['NB_DRONES'] = str(len(grid.start))
+    grid.create_setup_file()
