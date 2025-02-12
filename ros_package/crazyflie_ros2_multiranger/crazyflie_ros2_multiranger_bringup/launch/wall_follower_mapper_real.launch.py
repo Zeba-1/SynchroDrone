@@ -15,6 +15,8 @@ from launch_ros.actions import Node
 def generate_launch_description():
     # Configure ROS nodes for launch
 
+    NB_DRONES = int(os.getenv('NB_DRONES', '1'))
+
     # Setup project paths'''
     pkg_project_crazyswarm2 = get_package_share_directory('crazyflie')
     pkg_multiranger_bringup = get_package_share_directory('crazyflie_ros2_multiranger_bringup')
@@ -52,18 +54,22 @@ def generate_launch_description():
         ]
     )
 
-    # start a wall following node with a delay of 5 seconds
+    drone_name = []
+    for i in range(NB_DRONES):
+        drone_name.append('crazyflie' + str(i))
+
+    # start a path finder node with a delay of 5 seconds
     wall_following = Node(
-        package='crazyflie_ros2_multiranger_wall_following',
-        executable='wall_following_multiranger',
-        name='wall_following',
+        package='crazyflie_ros2_path_finder_controller',
+        executable='path_finder_controller',
+        name='path_finder_controller',
         output='screen',
         parameters=[
-            {'robot_prefix': 'crazyflie_real'},
+            {'robot_prefix': drone_name},
             {'use_sim_time': False},
             {'delay': 5.0},
-            {'max_turn_rate': 0.5},
-            {'max_forward_speed': 0.3},
+            {'max_turn_rate': 0.7},
+            {'max_forward_speed': 0.5},
             {'wall_following_direction': 'right'}
         ]
     )

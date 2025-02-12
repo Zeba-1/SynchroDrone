@@ -8,10 +8,10 @@ class PathFinder():
     def __init__(self, nb_drones, logger):
         self.nb_drones = nb_drones
         self.logger = logger
-        if nb_drones == 1:
-            self.algo = A_star()
-        elif nb_drones >= 2:
-            self.algo = QLrearning(nb_drones)
+        # if nb_drones == 1:
+        #     self.algo = A_star()
+        # elif nb_drones >= 2:
+        self.algo = QLrearning(nb_drones)
 
         self.path_goal = [0] * nb_drones
 
