@@ -7,9 +7,9 @@ class A_star:
     def __init__(self):
         # Paramètres de l'environnement 2D et du Q-learning
         self.grid_length, self.grid_width = 10, 10
-        self.start_position = []  # Départ en haut à gauche de la grille
-        self.goal_position = [] # Cible en bas à droite de la grille
-        self.obstacles = []  # Ensemble d'obstacles
+        self.start_position = []
+        self.goal_position = []
+        self.obstacles = []
 
         script_dir = Path(__file__).resolve().parent
         file_path = script_dir / "setup.txt"
@@ -40,10 +40,15 @@ class A_star:
         print(self.obstacles)
 
         self.actions = {
-            0: (1, 0),  # Haut
-            1: (-1, 0),   # Bas
-            2: (0, -1),  # Gauche
-            3: (0, 1)    # Droite
+            0: (-1, 0),   # Haut
+            1: (1, 0),    # Bas
+            2: (0, -1),   # Gauche
+            3: (0, 1),    # Droite
+            4: (-1, -1),  # Diagonale haut-gauche
+            5: (-1, 1),   # Diagonale haut-droite
+            6: (1, -1),   # Diagonale bas-gauche
+            7: (1, 1),    # Diagonale bas-droite
+            8: (0, 0)     # Reste sur place
         }
 
     def is_within_bounds(self, position):
@@ -64,11 +69,16 @@ class A_star:
             if self.is_within_bounds(new_position) and new_position not in self.obstacles:
                 neighbors.append(new_position)
         return neighbors
+    
+    def find_optimal_paths(self): # This can create collision and sometimes just find any path
+        optimal_paths = []
+        for start, end in zip(self.start_points, self.end_points):
+            path = self.find_path(start, end)
+            optimal_paths.append(path)
+        return optimal_paths
 
-    def find_optimal_paths(self):
+    def find_path(self, start, goal):
         """Algorithme A* pour trouver le chemin optimal de start à goal dans une grille 2D."""
-        start = self.start_position
-        goal = self.goal_position
         open_set = []
         heapq.heappush(open_set, (0, start))
         came_from = {}
