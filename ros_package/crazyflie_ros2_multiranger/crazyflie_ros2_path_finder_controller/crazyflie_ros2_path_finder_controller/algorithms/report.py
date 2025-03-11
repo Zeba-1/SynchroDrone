@@ -1,3 +1,4 @@
+import json
 import time
 
 class Report():
@@ -38,3 +39,23 @@ class Report():
             else :
                 print(f"Drone {i} - No path found")
         print(f"==============")
+
+        report_data = {
+            "total_time": self.end_time - self.start_time,
+            "collisions": self.collisions,
+            "drones": []
+        }
+
+        for i in range(self.nbDrone):
+            drone_data = {
+            "drone_id": i,
+            "steps": self.path_steps[i],
+            "reached_goal": self.reached_goals[i],
+            "path_found": self.path_found[i]
+            }
+            report_data["drones"].append(drone_data)
+
+        file = f"report_{self.algo}_{self.nbDrone}_{time.time()}.json"
+        with open(file, "w") as report_file:
+            json.dump(report_data, report_file, indent=4)
+        

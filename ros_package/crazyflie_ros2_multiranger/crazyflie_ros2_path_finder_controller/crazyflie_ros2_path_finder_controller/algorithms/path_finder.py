@@ -26,6 +26,8 @@ class PathFinder():
         for i in range(nb_drones):
             if self.path[i] is not None:
                 self.report.have_found_path(i)
+            else:
+                self.finished[i] = True
 
         self.last_time_logged = 0
 
