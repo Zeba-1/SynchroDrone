@@ -8,18 +8,18 @@ class QLrearning():
     def __init__(self, num_drones):
         # Paramètres de la grille et du Q-learning
         self.num_drones = num_drones
-        self.grid_size = 10
+        self.grid_size = 14
         self.alpha = 0.1  # Taux d'apprentissage
         self.gamma = 0.9  # Facteur de discount
         self.epsilon = 0.1  # Taux d'exploration
 
-        self.grid_length, self.grid_width = 10, 10
+        self.grid_length, self.grid_width = 14, 14
         self.obstacles = []
         self.starts_position = []  # Positions initiales des drones
         self.goals_position = []  # Cible en bas à droite de la grille
 
         script_dir = Path(__file__).resolve().parent
-        file_path = script_dir / "setup.txt"
+        file_path = "/home/user/crazyflie_mapping_demo/ros2_ws/src/SynchroDrone/ros_package/crazyflie_ros2_multiranger/crazyflie_ros2_path_finder_controller/crazyflie_ros2_path_finder_controller/algorithms/setup.txt"
         with open(file_path, 'r') as f:
             start_line = f.readline().strip()
             start_positions = start_line.split('-')

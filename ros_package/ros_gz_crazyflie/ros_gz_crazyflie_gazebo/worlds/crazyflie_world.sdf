@@ -46,7 +46,7 @@
 <include>
   <uri>model://crazyflie</uri>
   <name>crazyflie0</name>
-  <pose>-0.5 0.5 0 0 0 0</pose>
+  <pose>0.5 1.5 0 0 0 0</pose>
 <plugin
                     filename="gz-sim-multicopter-control-system"
                     name="gz::sim::systems::MulticopterVelocityControl">
@@ -84,5 +84,1222 @@
                         </rotor>
                     </rotorConfiguration>
                 </plugin></include>
+<include>
+  <uri>model://crazyflie</uri>
+  <name>crazyflie1</name>
+  <pose>3.5 1.5 0 0 0 0</pose>
+<plugin
+                    filename="gz-sim-multicopter-control-system"
+                    name="gz::sim::systems::MulticopterVelocityControl">
+                    <robotNamespace>crazyflie</robotNamespace>
+                    <commandSubTopic>crazy1/twist</commandSubTopic>
+                    <enableSubTopic>enable</enableSubTopic>
+                    <comLinkName>crazyflie/body</comLinkName>
+                    <velocityGain>1.25 1.25 0.2425</velocityGain>
+                    <attitudeGain>0.02 0.02 0.02</attitudeGain>
+                    <angularRateGain>0.005 0.005 0.005</angularRateGain>
+                    <rotorConfiguration>
+                        <rotor>
+                        <jointName>crazyflie/m1_joint</jointName>
+                        <forceConstant>1.28192e-08</forceConstant>
+                        <momentConstant>0.005964552</momentConstant>
+                        <direction>1</direction>
+                        </rotor>
+                        <rotor>
+                        <jointName>crazyflie/m2_joint</jointName>
+                        <forceConstant>1.28192e-08</forceConstant>
+                        <momentConstant>0.005964552</momentConstant>
+                        <direction>-1</direction>
+                        </rotor>
+                        <rotor>
+                        <jointName>crazyflie/m3_joint</jointName>
+                        <forceConstant>1.28192e-08</forceConstant>
+                        <momentConstant>0.005964552</momentConstant>
+                        <direction>1</direction>
+                        </rotor>
+                        <rotor>
+                        <jointName>crazyflie/m4_joint</jointName>
+                        <forceConstant>1.28192e-08</forceConstant>
+                        <momentConstant>0.005964552</momentConstant>
+                        <direction>-1</direction>
+                        </rotor>
+                    </rotorConfiguration>
+                </plugin></include>
+<model name="wall0">
+  <pose>-0.5 0.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall1">
+  <pose>-0.5 1.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall2">
+  <pose>-0.5 2.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall3">
+  <pose>-0.5 3.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall4">
+  <pose>-0.5 4.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall5">
+  <pose>-0.5 5.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall6">
+  <pose>-0.5 6.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall7">
+  <pose>-0.5 7.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall8">
+  <pose>-0.5 8.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall9">
+  <pose>-0.5 9.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall10">
+  <pose>-0.5 10.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall11">
+  <pose>-0.5 11.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall12">
+  <pose>-0.5 12.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall13">
+  <pose>-0.5 13.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall14">
+  <pose>0.5 0.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall15">
+  <pose>0.5 5.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall16">
+  <pose>0.5 6.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall17">
+  <pose>0.5 13.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall18">
+  <pose>1.5 0.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall19">
+  <pose>1.5 5.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall20">
+  <pose>1.5 6.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall21">
+  <pose>1.5 9.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall22">
+  <pose>1.5 13.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall23">
+  <pose>2.5 0.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall24">
+  <pose>2.5 5.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall25">
+  <pose>2.5 9.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall26">
+  <pose>2.5 13.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall27">
+  <pose>3.5 0.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall28">
+  <pose>3.5 9.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall29">
+  <pose>3.5 13.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall30">
+  <pose>4.5 0.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall31">
+  <pose>4.5 1.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall32">
+  <pose>4.5 2.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall33">
+  <pose>4.5 3.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall34">
+  <pose>4.5 4.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall35">
+  <pose>4.5 5.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall36">
+  <pose>4.5 8.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall37">
+  <pose>4.5 9.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall38">
+  <pose>4.5 13.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall39">
+  <pose>5.5 0.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall40">
+  <pose>5.5 13.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall41">
+  <pose>6.5 0.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall42">
+  <pose>6.5 3.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall43">
+  <pose>6.5 4.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall44">
+  <pose>6.5 5.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall45">
+  <pose>6.5 6.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall46">
+  <pose>6.5 7.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall47">
+  <pose>6.5 9.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall48">
+  <pose>6.5 10.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall49">
+  <pose>6.5 11.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall50">
+  <pose>6.5 12.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall51">
+  <pose>6.5 13.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall52">
+  <pose>7.5 0.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall53">
+  <pose>7.5 3.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall54">
+  <pose>7.5 13.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall55">
+  <pose>8.5 0.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall56">
+  <pose>8.5 5.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall57">
+  <pose>8.5 6.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall58">
+  <pose>8.5 13.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall59">
+  <pose>9.5 0.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall60">
+  <pose>9.5 5.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall61">
+  <pose>9.5 9.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall62">
+  <pose>9.5 13.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall63">
+  <pose>10.5 0.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall64">
+  <pose>10.5 5.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall65">
+  <pose>10.5 13.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall66">
+  <pose>11.5 0.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall67">
+  <pose>11.5 5.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall68">
+  <pose>11.5 9.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall69">
+  <pose>11.5 13.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall70">
+  <pose>12.5 0.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall71">
+  <pose>12.5 1.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall72">
+  <pose>12.5 2.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall73">
+  <pose>12.5 3.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall74">
+  <pose>12.5 4.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall75">
+  <pose>12.5 5.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall76">
+  <pose>12.5 6.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall77">
+  <pose>12.5 7.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall78">
+  <pose>12.5 8.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall79">
+  <pose>12.5 9.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall80">
+  <pose>12.5 10.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall81">
+  <pose>12.5 11.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall82">
+  <pose>12.5 12.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
+<model name="wall83">
+  <pose>12.5 13.5 0.5 0 0 0</pose>
+  <static>true</static>
+  <link name="link">
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 1</size>
+        </box>
+      </geometry>
+    </visual>
+  </link>
+</model>
+
   </world>
 </sdf>

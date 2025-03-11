@@ -138,7 +138,7 @@ class PathFinderController(Node):
             self.twist_publisher[i].publish(msg)
 
     def odom_subscribe_callback(self, msg):
-        self.get_logger().info(f"== DEBUG ==> Odom received for {0} : {msg.pose.pose.position.x}, {msg.pose.pose.position.y}")
+#        self.get_logger().info(f"== DEBUG ==> Odom received for {0} : {msg.pose.pose.position.x}, {msg.pose.pose.position.y}")
         self.position[0][0] = msg.pose.pose.position.x
         self.position[0][1] = msg.pose.pose.position.y
         self.position[0][2] = msg.pose.pose.position.z
@@ -150,7 +150,7 @@ class PathFinderController(Node):
         self.position_updated = True
 
     def odom_subscribe_callback1(self, msg):
-        self.get_logger().info(f"== DEBUG ==> Odom received for {1} : {msg.pose.pose.position.x}, {msg.pose.pose.position.y}")
+#        self.get_logger().info(f"== DEBUG ==> Odom received for {1} : {msg.pose.pose.position.x}, {msg.pose.pose.position.y}")
         self.position[1][0] = msg.pose.pose.position.x
         self.position[1][1] = msg.pose.pose.position.y
         self.position[1][2] = msg.pose.pose.position.z

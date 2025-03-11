@@ -12,7 +12,7 @@ class A_star:
         self.obstacles = []
 
         script_dir = Path(__file__).resolve().parent
-        file_path = script_dir / "setup.txt"
+        file_path = "/home/user/crazyflie_mapping_demo/ros2_ws/src/SynchroDrone/ros_package/crazyflie_ros2_multiranger/crazyflie_ros2_path_finder_controller/crazyflie_ros2_path_finder_controller/algorithms/setup.txt"
         with open(file_path, 'r') as f:
             start_line = f.readline().strip()
             start_positions = start_line.split('-')
