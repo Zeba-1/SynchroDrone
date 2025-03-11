@@ -72,7 +72,7 @@ class A_star:
     
     def find_optimal_paths(self): # This can create collision and sometimes just find any path
         optimal_paths = []
-        for start, end in zip(self.start_points, self.end_points):
+        for start, end in zip(self.start_position, self.goal_position):
             path = self.find_path(start, end)
             optimal_paths.append(path)
         return optimal_paths
@@ -94,7 +94,7 @@ class A_star:
                     current = came_from[current]
                 path.append(start)
                 path.reverse()
-                return [path]
+                return path
             
             for neighbor in self.get_neighbors(current):
                 tentative_g_score = g_score[current] + 1

@@ -11,9 +11,9 @@ class PathFinder():
         self.nb_drones = nb_drones
         self.logger = logger
         # if nb_drones == 1:
-        #     self.algo = A_star()
+        self.algo = A_star()
         # elif nb_drones >= 2:
-        self.algo = QLrearning(nb_drones)
+        #   self.algo = QLrearning(nb_drones)
         self.path_goal = [0] * nb_drones
         self.finished = [False] * nb_drones
 
@@ -21,7 +21,11 @@ class PathFinder():
         self.report.start()
 
         self.path = self.algo.find_optimal_paths()
-        self.logger.info("=== debug ===> optimal path:" + str(self.path))
+        self.logger.info("=== DEBUG ===> optimal path:" + str(self.path))
+
+        for i in range(nb_drones):
+            if self.path[i] is not None:
+                self.report.have_found_path(i)
 
         self.last_time_logged = 0
 
@@ -64,7 +68,7 @@ class PathFinder():
         for i in range(self.nb_drones):
             x_pos, y_pos, current_heading = positions[i]
 
-            if self.finished[i]:
+            if self.finished[i] or self.path[i] is None:
                 results[i] = (0., 0., 0.)
                 continue
             
