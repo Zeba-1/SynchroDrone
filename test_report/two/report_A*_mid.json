@@ -1,0 +1,21 @@
+{
+    "algo": "A*",
+    "total_time": 46.30368256568909,
+    "algo_time": 0.00024580955505371094,
+    "drones": [
+        {
+            "drone_id": 0,
+            "steps": 9,
+            "reached_goal": true,
+            "path_found": true,
+            "nb_collisions": 0
+        },
+        {
+            "drone_id": 1,
+            "steps": 8,
+            "reached_goal": true,
+            "path_found": true,
+            "nb_collisions": 0
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "algo": "Q-Learning",
+    "total_time": 56.95299196243286,
+    "algo_time": 1.7010812759399414,
+    "drones": [
+        {
+            "drone_id": 0,
+            "steps": 9,
+            "reached_goal": true,
+            "path_found": true,
+            "nb_collisions": 0
+        }
+    ]
+}

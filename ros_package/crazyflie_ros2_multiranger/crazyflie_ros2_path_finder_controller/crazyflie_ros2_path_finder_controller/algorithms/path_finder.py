@@ -5,23 +5,24 @@ from .astar import A_star
 from .qlearning_multi_agent import QLrearning
 from .report import Report
 
+TIME_LIMIT = 300 # 5 minutes = max time for the simulation
 
 class PathFinder():
     def __init__(self, nb_drones, logger):
         self.nb_drones = nb_drones
         self.logger = logger
-        # if nb_drones == 1:
         self.algo = A_star()
-        # elif nb_drones >= 2:
-        #   self.algo = QLrearning(nb_drones)
+        #self.algo = QLrearning(nb_drones)
         self.path_goal = [0] * nb_drones
         self.finished = [False] * nb_drones
 
-        self.report = Report(nb_drones, "Q-Learning")
+        self.report = Report(nb_drones, self.algo.name())
         self.report.start()
 
+        start_thinking = time.time()
         self.path = self.algo.find_optimal_paths()
-        self.logger.info("=== DEBUG ===> optimal path:" + str(self.path))
+        self.report.set_algo_calculation(time.time() - start_thinking)
+        self.logger.info("=== DEBUG ===> optimal path:" + str(self.path) + "in " + str(time.time() - start_thinking) + "s")
 
         for i in range(nb_drones):
             if self.path[i] is not None:
@@ -34,6 +35,9 @@ class PathFinder():
     # Helper function
     def grid_to_world(self, grid):
         return grid[0] - 0.5, grid[1] + 0.5
+    
+    def world_to_grid(self, x, y):
+        return int(x + 0.5), int(y - 0.5)
 
     def get_heading(self, x_pos, y_pos, x_goal, y_goal):
         return math.atan2(y_goal - y_pos, x_goal - x_pos)
@@ -63,9 +67,7 @@ class PathFinder():
     def path_finder(self, positions):
         results = [(0., 0., 0.)] * self.nb_drones
 
-        if self.isColliding(positions):
-            self.report.add_collision()
-            self.logger.info("== DEBUG ==> COLLISION")
+        self.isColliding(positions)
 
         for i in range(self.nb_drones):
             x_pos, y_pos, current_heading = positions[i]
@@ -105,6 +107,12 @@ class PathFinder():
                 self.logger.info(f"== DEBUG ==> Drone {i} - x: {x_pos} - y: {y_pos} - heading: {current_heading} => {desired_heading} - goal: {x_goal}, {y_goal} - result: {results[i]}")
                 self.last_time_logged = time.time()
 
+            if (self.report.start_time + TIME_LIMIT) < time.time():
+                self.report.end()
+                self.report.generate_report()
+                self.finished = [True] * self.nb_drones
+                self.logger.info("== DEBUG ==> TIME LIMIT REACHED - END OF SIMULATION")
+
         return results
     
     def isColliding(self, positions):
@@ -115,6 +123,13 @@ class PathFinder():
                 if i == j:
                     continue
                 x_pos_j, y_pos_j, current_heading_j = positions[j]
-                if math.sqrt((x_pos - x_pos_j)**2 + (y_pos - y_pos_j)**2) < 0.5:
+                if math.sqrt((x_pos - x_pos_j)**2 + (y_pos - y_pos_j)**2) < 0.3:
+                    self.report.add_collision(i, self.world_to_grid(x_pos, y_pos))
+                    return True
+                
+            for j in range(len(self.algo.obstacles)):
+                x_obs, y_obs = self.algo.obstacles[j]
+                if math.sqrt((x_pos - x_obs)**2 + (y_pos - y_obs)**2) < 0.25:
+                    self.report.add_collision(i, self.world_to_grid(x_pos, y_pos))
                     return True
         return False

@@ -13,7 +13,7 @@ from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 
 def generate_launch_description():
-    NB_DRONES = int(os.getenv('NB_DRONES', '2'))
+    NB_DRONES = int(os.environ.get('NB_DRONES', 3))  # Default to 1 if not set
 
     # Setup project paths
     pkg_project_crazyflie_gazebo = get_package_share_directory('ros_gz_crazyflie_bringup')

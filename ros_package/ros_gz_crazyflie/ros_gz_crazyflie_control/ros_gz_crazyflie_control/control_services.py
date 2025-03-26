@@ -32,7 +32,7 @@ class ControlServices(Node):
         self.keep_height = False
         self.teleop_cmd = Twist()
 
-        print(f"Control services for {robot_prefix} initialized and received msg on {incoming_twist_topic}")
+        self.get_logger().info(f"Control services for {robot_prefix} initialized and received msg on {incoming_twist_topic}")
 
     def timer_callback(self):
         msg = self.teleop_cmd

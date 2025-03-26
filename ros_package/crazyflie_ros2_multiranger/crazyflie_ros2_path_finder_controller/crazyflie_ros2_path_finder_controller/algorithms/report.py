@@ -6,16 +6,19 @@ class Report():
         self.nbDrone = nbDrone
         self.algo = algo
 
-        self.collisions = 0
+        self.collisions = [set()] * self.nbDrone
         self.path_steps = [0] * self.nbDrone
         self.path_found = [False] * self.nbDrone
         self.reached_goals = [False] * self.nbDrone
 
+    def set_algo_calculation(self, time):
+        self.algo_time = time
+
     def add_steps(self, drone):
         self.path_steps[drone] += 1
 
-    def add_collision(self):
-        self.collisions += 1
+    def add_collision(self, drone, position):
+        self.collisions[drone].add(position)
 
     def have_found_path(self, drone):
         self.path_found[drone] = True
@@ -41,8 +44,9 @@ class Report():
         print(f"==============")
 
         report_data = {
+            "algo": self.algo,
             "total_time": self.end_time - self.start_time,
-            "collisions": self.collisions,
+            "algo_time": self.algo_time,
             "drones": []
         }
 
@@ -51,11 +55,12 @@ class Report():
             "drone_id": i,
             "steps": self.path_steps[i],
             "reached_goal": self.reached_goals[i],
-            "path_found": self.path_found[i]
+            "path_found": self.path_found[i],
+            "nb_collisions": len(self.collisions[i]),
             }
             report_data["drones"].append(drone_data)
 
-        file = f"report_{self.algo}_{self.nbDrone}_{time.time()}.json"
+        file = f"report_{self.algo}_{self.nbDrone}_{int(time.time())}.json"
         with open(file, "w") as report_file:
             json.dump(report_data, report_file, indent=4)
         

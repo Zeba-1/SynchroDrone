@@ -74,6 +74,9 @@ class QLrearning():
             8: (0, 0)     # Reste sur place
         }
 
+    def name(self):
+        return "Q-Learning"
+
     def get_next_position(self, state, action):
         """Calcul de la prochaine position en fonction de l'action choisie."""
         row, col = state

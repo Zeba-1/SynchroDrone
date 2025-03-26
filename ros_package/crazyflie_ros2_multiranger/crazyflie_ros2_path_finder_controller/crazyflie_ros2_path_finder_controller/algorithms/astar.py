@@ -6,7 +6,7 @@ import heapq
 class A_star:
     def __init__(self):
         # Paramètres de l'environnement 2D et du Q-learning
-        self.grid_length, self.grid_width = 10, 10
+        self.grid_length, self.grid_width = 20, 20
         self.start_position = []
         self.goal_position = []
         self.obstacles = []
@@ -35,10 +35,6 @@ class A_star:
                 x, y = pos.split('.')
                 self.obstacles.append((int(x), int(y)))
 
-        print(self.start_position)
-        print(self.goal_position)
-        print(self.obstacles)
-
         self.actions = {
             0: (-1, 0),   # Haut
             1: (1, 0),    # Bas
@@ -50,6 +46,9 @@ class A_star:
             7: (1, 1),    # Diagonale bas-droite
             8: (0, 0)     # Reste sur place
         }
+
+    def name(self):
+        return "A*"
 
     def is_within_bounds(self, position):
         """Vérifie si la position est dans les limites de la grille."""
@@ -66,6 +65,13 @@ class A_star:
         for action in self.actions.values():
             x, y = position[0] + action[0], position[1] + action[1]
             new_position = (x, y)
+
+            # Ignore diagonal moves if they cross an obstacle
+            if action in [(-1, -1), (-1, 1), (1, -1), (1, 1)]:
+                if ((position[0] + action[0], position[1]) in self.obstacles or
+                    (position[0], position[1] + action[1]) in self.obstacles):
+                    continue
+
             if self.is_within_bounds(new_position) and new_position not in self.obstacles:
                 neighbors.append(new_position)
         return neighbors

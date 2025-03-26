@@ -60,8 +60,12 @@ class PathFinderController(Node):
             self.get_logger().info(f"== DEBUG ==> {robot_prefix}/odom !")
             if robot_index == 0:
                 self.odom_subscriber.append(self.create_subscription(Odometry, f"{robot_prefix}/odom", self.odom_subscribe_callback, 10))
-            else:
+            elif robot_index == 1:
                 self.odom_subscriber.append(self.create_subscription(Odometry, f"{robot_prefix}/odom", self.odom_subscribe_callback1, 10))
+            elif robot_index == 2:
+                self.odom_subscriber.append(self.create_subscription(Odometry, f"{robot_prefix}/odom", self.odom_subscribe_callback2, 10))
+            elif robot_index == 3:
+                self.odom_subscriber.append(self.create_subscription(Odometry, f"{robot_prefix}/odom", self.odom_subscribe_callback3, 10))
             
             self.twist_publisher.append(self.create_publisher(Twist, f'/cmd_vel{robot_index}', 10))
 
@@ -159,6 +163,30 @@ class PathFinderController(Node):
         self.angles[1][0] = euler[0]
         self.angles[1][1] = euler[1]
         self.angles[1][2] = euler[2]
+        self.position_updated = True
+
+    def odom_subscribe_callback2(self, msg):
+#        self.get_logger().info(f"== DEBUG ==> Odom received for {2} : {msg.pose.pose.position.x}, {msg.pose.pose.position.y}")
+        self.position[2][0] = msg.pose.pose.position.x
+        self.position[2][1] = msg.pose.pose.position.y
+        self.position[2][2] = msg.pose.pose.position.z
+        q = msg.pose.pose.orientation
+        euler = tf_transformations.euler_from_quaternion([q.x, q.y, q.z, q.w])
+        self.angles[2][0] = euler[0]
+        self.angles[2][1] = euler[1]
+        self.angles[2][2] = euler[2]
+        self.position_updated = True
+
+    def odom_subscribe_callback3(self, msg):
+#        self.get_logger().info(f"== DEBUG ==> Odom received for {2} : {msg.pose.pose.position.x}, {msg.pose.pose.position.y}")
+        self.position[3][0] = msg.pose.pose.position.x
+        self.position[3][1] = msg.pose.pose.position.y
+        self.position[3][2] = msg.pose.pose.position.z
+        q = msg.pose.pose.orientation
+        euler = tf_transformations.euler_from_quaternion([q.x, q.y, q.z, q.w])
+        self.angles[3][0] = euler[0]
+        self.angles[3][1] = euler[1]
+        self.angles[3][2] = euler[2]
         self.position_updated = True
 
     def scan_subscribe_callback(self, msg):

@@ -27,7 +27,7 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    nbDrone_arg = os.getenv('NB_DRONES', '2')
+    nbDrone_arg =  os.getenv('NB_DRONES', '3')
 
     node_to_launch = []
 
